@@ -16,7 +16,6 @@ export const Login = async () => {
           <form
             action={async () => {
               "use server";
-
               await signOut({ redirectTo: "/" });
             }}
           >
@@ -27,15 +26,24 @@ export const Login = async () => {
           </Link>
         </>
       ) : (
-        <form
-          action={async () => {
-            "use server";
-
-            await signIn("github");
-          }}
-        >
-          <button type="submit">Login</button>
-        </form>
+        <>
+          <form
+            action={async () => {
+              "use server";
+              await signIn("github");
+            }}
+          >
+            <button type="submit">Login With Github</button>
+          </form>
+          <form
+            action={async () => {
+              "use server";
+              await signIn("google");
+            }}
+          >
+            <button type="submit">Login With Google</button>
+          </form>
+        </>
       )}
     </div>
   );
