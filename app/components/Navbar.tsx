@@ -13,7 +13,6 @@ export const Navbar = async () => {
         </Link>
 
           <Login />
-
       </nav>
     </header>
   );
