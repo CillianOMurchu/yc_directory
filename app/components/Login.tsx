@@ -19,7 +19,7 @@ export const Login = async () => {
               await signOut({ redirectTo: "/" });
             }}
           >
-            <button type="submit">Signout</button>
+            <button type="submit">Logout</button>
           </form>
           <Link href={`/user/${session.user.id}`}>
             <span>{session?.user.name}</span>
