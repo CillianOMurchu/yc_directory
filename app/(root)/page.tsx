@@ -34,7 +34,7 @@ const App = () => {
   // The function then waits for the new response and updates the 'response'
   // value which we then display on the page
   const handleSubmit = async () => {
-    const response = (await axios.post("/api/chat", { question: value })).data
+    const response = (await axios.post("/chat", { question: value })).data
       .choices[0].message.content;
     setResponse(response);
   };
