@@ -34,8 +34,17 @@ const App = () => {
   // The function then waits for the new response and updates the 'response'
   // value which we then display on the page
   const handleSubmit = async () => {
-    const response = (await axios.post("/chat", { question: value })).data
-      .choices[0].message.content;
+    const response = (
+      await axios.post(
+        "/chat",
+        { question: value },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+        }
+      )
+    ).data.choices[0].message.content;
     setResponse(response);
   };
 
@@ -47,7 +56,12 @@ const App = () => {
   return (
     <div className="container">
       <div>
-        <input type="text" value={value} onChange={onChange} placeholder="Search in here"></input>
+        <input
+          type="text"
+          value={value}
+          onChange={onChange}
+          placeholder="Search in here"
+        ></input>
       </div>
       <div>
         <button onClick={handleSubmit}>Click me for answers!</button>
