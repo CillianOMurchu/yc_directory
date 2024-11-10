@@ -1,9 +1,11 @@
+@import "@radix-ui/themes/styles.css";
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* 
 @layer base {
   :root {
     --radius: 0.5rem;
@@ -79,7 +81,6 @@
     @apply text-black-100 text-sm font-normal;
   }
 
-  /* profile */
   .profile_container {
     @apply w-full pb-10 pt-20 px-6 max-w-7xl mx-auto lg:flex-row flex-col flex gap-10;
   }
@@ -96,7 +97,6 @@
     @apply rounded-full object-cover border-[3px] border-black;
   }
 
-  /* idea details */
   .divider {
     @apply border-dotted bg-zinc-400 max-w-4xl my-10 mx-auto;
   }
@@ -105,7 +105,6 @@
     @apply bg-zinc-400 h-10 w-24 rounded-lg fixed bottom-3 right-3;
   }
 
-  /* navbar */
   .avatar {
     @apply p-0 focus-visible:ring-0 bg-none rounded-full drop-shadow-md !important;
   }
@@ -118,7 +117,6 @@
     @apply border-[5px] py-4 border-black bg-white text-black relative shadow-100 font-work-sans font-medium hover:shadow-none transition-all duration-500 !important;
   }
 
-  /* searchform */
   .search-form {
     @apply max-w-3xl w-full min-h-[80px] bg-white border-[5px] border-black rounded-[80px] text-[24px] mt-8 px-5 flex flex-row items-center gap-5;
   }
@@ -131,7 +129,6 @@
     @apply size-[50px] rounded-full bg-black flex justify-center items-center !important;
   }
 
-  /* startupcard */
   .startup-card {
     @apply bg-white border-[5px] border-black py-6 px-5 rounded-[22px] shadow-200 hover:border-primary transition-all duration-500 hover:shadow-300 hover:bg-primary-100;
   }
@@ -156,7 +153,6 @@
     @apply w-full h-96 rounded-[22px] bg-zinc-400;
   }
 
-  /* startupform */
   .startup-form {
     @apply max-w-2xl mx-auto bg-white my-10 space-y-8 px-6;
   }
@@ -185,7 +181,6 @@
     @apply bg-primary border-[4px] border-black rounded-full p-5 min-h-[70px] w-full font-bold text-[18px] !important;
   }
 
-  /* view */
   .view-container {
     @apply flex justify-end items-center mt-5 fixed bottom-3 right-3;
   }
@@ -218,4 +213,4 @@
 
 .w-md-editor-toolbar {
   padding: 10px !important;
-}
+} */

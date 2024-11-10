@@ -4,11 +4,11 @@
 // boundary between Server and Client Component modules.
 "use client";
 
-
 // import useState so that we can update the response we get from the API
 import { useState } from "react";
 // import axios so we can easily send the user's input to our server
 import axios from "axios";
+import { Input } from "@/app/components/ui/Input";
 
 const App = () => {
   // We store and update the responses we get from the API with this state
@@ -57,12 +57,7 @@ const App = () => {
   return (
     <div className="container">
       <div>
-        <input
-          type="text"
-          value={value}
-          onChange={onChange}
-          placeholder="Search in here"
-        ></input>
+        <Input className="search-input" value={value} onChange={onChange} />
       </div>
       <div>
         <button onClick={handleSubmit}>Click me for answers!</button>

@@ -1,48 +1,24 @@
 import React from "react";
-import { auth, signOut, signIn } from "@/auth";
+import { auth } from "@/auth";
 import Link from "next/link";
+import { LoginButton } from "@/app/components/login/LoginButton";
+import { LogoutButton } from "@/app/components/login/LogoutButton";
 
 export const Login = async () => {
   const session = await auth();
-
+  console.log('session.user is ', session?.user);
   return (
     <div className="flex items-center gap-5">
       {session && session.user ? (
         <>
-          <Link href="/startup/create">
-            <span>Create</span>
-          </Link>
-
-          <form
-            action={async () => {
-              "use server";
-              await signOut({ redirectTo: "/" });
-            }}
-          >
-            <button type="submit">Logout</button>
-          </form>
+          <LogoutButton />
           <Link href={`/user/${session.user.id}`}>
             <span>{session?.user.name}</span>
           </Link>
         </>
       ) : (
         <>
-          <form
-            action={async () => {
-              "use server";
-              await signIn("github");
-            }}
-          >
-            <button type="submit">Login With Github</button>
-          </form>
-          <form
-            action={async () => {
-              "use server";
-              await signIn("google");
-            }}
-          >
-            <button type="submit">Login With Google</button>
-          </form>
+          <LoginButton provider={{ name: "google" }} />
         </>
       )}
     </div>

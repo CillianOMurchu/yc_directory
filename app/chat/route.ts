@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       {
         role: "system",
         // We give the chatbot a role with some content to determine how it will behave
-        content: "You are a helpful assistant who supports Liverpool FC",
+        content: "You are a helpful assistant who knows everything about gaming.",
       },
       {
         // We ask the chatbot to generate an answer based on the user's question
