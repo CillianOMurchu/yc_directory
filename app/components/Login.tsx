@@ -8,13 +8,9 @@ export const Login = async () => {
   return (
     <div className="flex justify-self-end items-center gap-3">
       {session && session.user ? (
-        <>
-          <LogoutButton />
-        </>
+        <LogoutButton />
       ) : (
-        <>
-          <LoginButton provider={{ name: "google" }} />
-        </>
+        <LoginButton provider={{ name: "google" }} />
       )}
     </div>
   );
