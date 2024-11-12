@@ -8,7 +8,7 @@ export const Login = async () => {
   const session = await auth();
   console.log('session.user is ', session?.user);
   return (
-    <div className="flex items-center gap-5">
+    <div className="flex justify-self-end items-center gap-3">
       {session && session.user ? (
         <>
           <LogoutButton />

@@ -1,70 +1,82 @@
-// src/app/page.tsx
-
-// In Next.js, we need to add this line to the top of our file to declare a
-// boundary between Server and Client Component modules.
 "use client";
 
-// import useState so that we can update the response we get from the API
 import { useState } from "react";
-// import axios so we can easily send the user's input to our server
 import axios from "axios";
-import { Input } from "@/app/components/ui/Input";
+import * as Form from "@radix-ui/react-form";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
+
+import { Button } from "@radix-ui/themes";
 
 const App = () => {
-  // We store and update the responses we get from the API with this state
-  // I've added a default value to the 'response' state that we should see
-  // when the page initially loads
   const [response, setResponse] = useState<string>(
     "Hi there! How can I assist you?"
   );
-  // We also store the input we get from the user in the 'value' state and
-  // update it everytime the user types into the input field we have added below
+
   const [value, setValue] = useState<string>("");
 
-  // We use this function in the newly added 'input' in the return statement.
-  // Each time the user types into the input, this function ensures that the
-  // 'value' state is updated
-  // We also add a type to the event that we pass in
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setValue(e.target.value);
 
-  // This function runs when the user presses the button we have added below
-  // This function takes the contents of 'value' (the input from the user)
-  // and then sends this value to our server, which then sends a new request
-  // to the API
-  // The function then waits for the new response and updates the 'response'
-  // value which we then display on the page
-  const handleSubmit = async () => {
-    const response = (
-      await axios.post(
-        "/chat",
-        { question: value },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          },
-        }
-      )
-    ).data.choices[0].message.content;
-    setResponse(response);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevents default form submission
+
+    try {
+      const response = (
+        await axios.post(
+          "/chat",
+          { question: value },
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+            },
+          }
+        )
+      ).data.choices[0].message.content;
+      setResponse(response);
+    } catch (error) {
+      console.error("Error fetching response:", error);
+    }
   };
 
-  // In our return statement, we add an input field so that the user can ask
-  // questions to the API.
-  // We also add a button so that the user can submit their question which then
-  // updates the response from the API
-  // We show the updated response on our page
   return (
-    <div className="container">
-      <div>
-        <Input className="search-input" value={value} onChange={onChange} />
-      </div>
-      <div>
-        <button onClick={handleSubmit}>Click me for answers!</button>
-      </div>
-      <div>
-        <p>Chatbot: {response}</p>
-      </div>
+    <div className="chat">
+      {/* <Form.Root onSubmit={handleSubmit} className="FormRoot my-4">
+        <Form.Field className="FormField" name="question">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+            }}
+          >
+            <Form.Message className="FormMessage" match="valueMissing">
+              Please enter your query
+            </Form.Message>
+          </div>
+          <Form.Control asChild>
+            <div className="chat__input">
+              <div className="gap-x-2.5 rounded-md flex items-center p-4 bg-gray-800">
+                <textarea
+                  autoFocus
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Type your message here..."
+                  className=" flex-grow bg-gray-700 text-white placeholder-gray-400 border-none focus:ring-2 focus:ring-blue-500 p-3 outline-none"
+                />
+                <Form.Submit asChild>
+                  <Button size="2" color="green">
+                    <ArrowUpIcon />
+                  </Button>
+                </Form.Submit>
+              </div>
+            </div>
+          </Form.Control>
+        </Form.Field>
+      </Form.Root> */}
+
+      {/* <div> */}
+      {/* <p>Chatbot: {response}</p> */}
+      {/* </div> */}
     </div>
   );
 };
