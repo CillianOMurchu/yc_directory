@@ -2,15 +2,16 @@
 
 import { useState } from "react";
 import axios from "axios";
-import * as Form from "@radix-ui/react-form";
-import { ArrowUpIcon } from "@radix-ui/react-icons";
 
-import { Button } from "@radix-ui/themes";
+import { Response } from "@/app/components/chat/Response";
+import { Question } from "@/app/components/chat/Question";
+import { Spinner } from "@radix-ui/themes";
 
 const App = () => {
-  const [response, setResponse] = useState<string>(
-    "Hi there! How can I assist you?"
-  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [conversation, setConversation] = useState<
+    { role: string; content: string }[]
+  >([{ role: "assistant", content: "Hi there! How can I assist you?" }]);
 
   const [value, setValue] = useState<string>("");
 
@@ -19,27 +20,45 @@ const App = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevents default form submission
-
+    // setConversation(() => [...conversation, { role: "User", content: value }]);
+    setConversation((prevConversation) => [
+      ...prevConversation,
+      { role: "User", content: value },
+    ]);
     try {
-      const response = (
-        await axios.post(
-          "/chat",
-          { question: value },
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-            },
-          }
-        )
-      ).data.choices[0].message.content;
-      setResponse(response);
+      setIsLoading(true);
+      const response = await axios.post(
+        "/chat",
+        { question: value },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+        }
+      );
+      console.log("response is ", response);
+      const responseContent = response.data.choices[0].message.content;
+      if (responseContent) {
+        setIsLoading(false);
+        const role = response.data.choices[0].message.role;
+        setConversation((prevConversation) => [
+          ...prevConversation,
+          { role, content: responseContent },
+        ]);
+      }
     } catch (error) {
+      setIsLoading(false);
       console.error("Error fetching response:", error);
     }
   };
 
   return (
     <div className="chat">
+      {isLoading && <Spinner />}
+
+      <Response response={conversation} />
+
+      <Question value={value} onChange={onChange} handleSubmit={handleSubmit} />
       {/* <Form.Root onSubmit={handleSubmit} className="FormRoot my-4">
         <Form.Field className="FormField" name="question">
           <div
@@ -72,11 +91,7 @@ const App = () => {
             </div>
           </Form.Control>
         </Form.Field>
-      </Form.Root> */}
-
-      {/* <div> */}
-      {/* <p>Chatbot: {response}</p> */}
-      {/* </div> */}
+      </Form.Root>  */}
     </div>
   );
 };

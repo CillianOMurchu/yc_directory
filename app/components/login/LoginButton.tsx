@@ -17,7 +17,7 @@ export const LoginButton = ({ provider }: LoginButtonProps) => {
             await signIn(provider.name);
           }}
         >
-          <Button type="submit" size="2" variant="classic">
+          <Button type="submit" color="green" size="2" variant="soft">
             Login With{" "}
             {provider.name.charAt(0).toUpperCase() + provider.name.slice(1)}
           </Button>
@@ -30,7 +30,7 @@ export const LoginButton = ({ provider }: LoginButtonProps) => {
               await signIn("google");
             }}
           >
-            <Button type="submit" size="2" variant="classic">
+            <Button type="submit" color="green" size="2" variant="soft">
               Login With Google
             </Button>
           </form>

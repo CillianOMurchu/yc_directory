@@ -3,6 +3,25 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+:root {
+  --radius: 8px;
+}
+
+main {
+  background-color: hsl(240 3.7% 15.9%);
+  color: white;
+}
+
+textarea {
+  color: black;
+  resize: none;
+}
+
+.chat {
+  height: calc(100vh - 56px);
+}
+
 /* @import "tailwindcss"; */
 /* 
 * {

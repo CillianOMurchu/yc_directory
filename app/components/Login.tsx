@@ -6,15 +6,11 @@ import { LogoutButton } from "@/app/components/login/LogoutButton";
 
 export const Login = async () => {
   const session = await auth();
-  console.log('session.user is ', session?.user);
   return (
     <div className="flex justify-self-end items-center gap-3">
       {session && session.user ? (
         <>
           <LogoutButton />
-          <Link href={`/user/${session.user.id}`}>
-            <span>{session?.user.name}</span>
-          </Link>
         </>
       ) : (
         <>
