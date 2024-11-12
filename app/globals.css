@@ -13,13 +13,34 @@ main {
   color: white;
 }
 
-textarea {
-  color: black;
-  resize: none;
-}
-
 .chat {
   height: calc(100vh - 56px);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: 20px 40px;
+}
+
+.question__container {
+  border: 2px solid white;
+  height: 186px;
+  display: flex;
+
+  button {
+    align-self: flex-end;
+  }
+}
+
+textarea {
+  resize: none;
+  width: 100%;
+
+  background: unset;
+  color: white;
+  font-weight: 600;
+}
+
+textarea:focus {
+  outline: none;
 }
 
 /* @import "tailwindcss"; */

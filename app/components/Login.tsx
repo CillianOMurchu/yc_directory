@@ -1,6 +1,5 @@
 import React from "react";
 import { auth } from "@/auth";
-import Link from "next/link";
 import { LoginButton } from "@/app/components/login/LoginButton";
 import { LogoutButton } from "@/app/components/login/LogoutButton";
 
