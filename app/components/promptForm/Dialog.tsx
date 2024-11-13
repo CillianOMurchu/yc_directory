@@ -18,21 +18,21 @@ const DialogPrompt = ({ onSave }: DialogProps) => {
     console.log("formDetails is ", formDetails);
   };
 
-  const saveChanges = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const saveChanges = () => {
     onSave(formDetails);
   };
 
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button className="Button violet">Edit profile</button>
+        <button className="Button violet">Prompt Form</button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content className="DialogContent">
-          <Dialog.Title className="DialogTitle">Edit profile</Dialog.Title>
+          <Dialog.Title className="DialogTitle">Prompt Form</Dialog.Title>
           <Dialog.Description className="DialogDescription">
-            Make changes to your profile here. Click save when you're done.
+
           </Dialog.Description>
           <PromptInput name="name" onChange={onChange} />
           <PromptInput name="company" onChange={onChange} />
