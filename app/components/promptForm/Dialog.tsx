@@ -37,6 +37,7 @@ const DialogPrompt = ({ onSave }: DialogProps) => {
           <PromptInput name="name" onChange={onChange} />
           <PromptInput name="company" onChange={onChange} />
           <PromptInput name="context" onChange={onChange} />
+          <PromptInput name="objective" onChange={onChange} />
           <div
             style={{
               display: "flex",
