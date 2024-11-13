@@ -34,7 +34,15 @@ const ChatBox = ({ session }: ChatBoxProps) => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post("/chat", { question: value });
+      const response = await axios.post(
+        "/chat",
+        { question: value },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+        }
+      );
       const responseContent = response.data.choices[0].message.content;
       if (responseContent) {
         setIsLoading(false);
