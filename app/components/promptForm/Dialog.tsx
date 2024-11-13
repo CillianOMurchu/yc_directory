@@ -4,17 +4,18 @@ import React, { ChangeEvent, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import "./dialog.css";
+import PromptInput from "@/app/components/promptForm/PromptInput";
 
 type DialogProps = {
-  onSave: (e: { name: string }) => void;
+  onSave: (e: { [key: string]: string }) => void;
 };
 
 const DialogPrompt = ({ onSave }: DialogProps) => {
-  const [formDetails, setFormDetails] = useState({ name: "" });
+  const [formDetails, setFormDetails] = useState({});
 
-  const [name, setName] = useState<string>("");
-  const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormDetails({ ...formDetails, name: e.target.value });
+  const onChange = (e: ChangeEvent<HTMLInputElement>, name: string) => {
+    setFormDetails({ ...formDetails, [name]: e.target.value });
+    console.log("formDetails is ", formDetails);
   };
 
   const saveChanges = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,18 +34,9 @@ const DialogPrompt = ({ onSave }: DialogProps) => {
           <Dialog.Description className="DialogDescription">
             Make changes to your profile here. Click save when you're done.
           </Dialog.Description>
-          <fieldset className="Fieldset">
-            <label className="Label" htmlFor="name">
-              Name
-            </label>
-            <input
-              className="Input"
-              id="name"
-              data-1p-ignore
-              defaultValue="Pedro Duarte"
-              onChange={(e) => onChangeName(e)}
-            />
-          </fieldset>
+          <PromptInput name="name" onChange={onChange} />
+          <PromptInput name="company" onChange={onChange} />
+          <PromptInput name="context" onChange={onChange} />
           <div
             style={{
               display: "flex",

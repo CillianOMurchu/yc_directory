@@ -6,7 +6,7 @@ import DialogPrompt from "@/app/components/promptForm/Dialog";
 type PromptFormProps = {};
 
 const PromptForm = () => {
-  const onSave = async (e: { name: string }) => {
+  const onSave = async (e: { [key: string]: string }) => {
     console.log("Save changes", e);
   };
   return <DialogPrompt onSave={onSave} />;
