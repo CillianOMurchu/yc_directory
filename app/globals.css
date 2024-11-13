@@ -13,6 +13,11 @@ main {
   color: white;
 }
 
+.app {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
 .chat {
   height: calc(100vh - 56px);
   display: grid;
