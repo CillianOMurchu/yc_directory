@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 
-const apiKey = process.env.OPEN_AI_KEY;
-const openai = new OpenAI({ apiKey: apiKey });
+const openai = new OpenAI({ apiKey: "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" });
 
 export async function POST(req: Request) {
   const { question } = await req.json();
