@@ -7,9 +7,10 @@ import axios from "axios";
 import { Response } from "@/app/components/chat/Response";
 import { Question } from "@/app/components/chat/Question";
 import { Spinner } from "@radix-ui/themes";
+import { Session } from "next-auth";
 
 type ChatBoxProps = {
-  session: any;
+  session: Session | null;
 };
 
 const ChatBox = ({ session }: ChatBoxProps) => {
