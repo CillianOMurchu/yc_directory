@@ -10,7 +10,6 @@ type PromptFormProps = {
 };
 
 const PromptForm = ({ session }: PromptFormProps) => {
-
   const [prompt, setPrompt] = useState<string>("");
 
   useEffect(() => {
@@ -35,10 +34,10 @@ const PromptForm = ({ session }: PromptFormProps) => {
       .join(", ");
 
     const prompt =
-      // `Speak only in english. ` +
-      // `ONLY respond with JSON, for example, { aKey: aValue } ` +
-      // "Do NOT prefix with any markdown, like ```json or otherwise" +
-      // `Do not respond with Markdown or anything else, ONLY JSON. ` +
+      `Speak only in english. ` +
+      `ONLY respond with JSON, for example, { aKey: aValue } ` +
+      "Do NOT prefix with any markdown, like ```json or otherwise" +
+      `Do not respond with Markdown or anything else, ONLY JSON. ` +
       `You are the virtual assistant of the person ${name} who works for ${company}. ` +
       `Your goal is to respond to the user in the same language they use, utilizing the 'message' variable. ` +
       `If you don't have a message variable in the response, then make sure you add at least an options key and put the array of answers as the value. ` +
