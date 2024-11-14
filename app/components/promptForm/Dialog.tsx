@@ -5,21 +5,34 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import "./dialog.css";
 import PromptInput from "@/app/components/promptForm/PromptInput";
+import { Divider } from "@/app/components/separator/Divider";
+import PromptField, {
+  PromptFieldType,
+} from "@/app/components/promptForm/PromptField";
 
 type DialogProps = {
-  onSave: (e: { [key: string]: string }) => void;
+  onSave: (e: { [key: string]: string } & { fields: PromptFieldType[] }) => void;
 };
 
 const DialogPrompt = ({ onSave }: DialogProps) => {
   const [formDetails, setFormDetails] = useState({});
+  const [fieldDetails, setFieldDetails] = useState<PromptFieldType[]>([]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>, name: string) => {
     setFormDetails({ ...formDetails, [name]: e.target.value });
     console.log("formDetails is ", formDetails);
   };
 
+  const onAddField = (newField: PromptFieldType) => {
+    console.log("previous fields are ", fieldDetails);
+    setFieldDetails([...fieldDetails, newField]);
+    console.log("fieldDetails is ", fieldDetails);
+  };
+
   const saveChanges = () => {
-    onSave(formDetails);
+    const result = { ...formDetails, fields: fieldDetails };
+    console.log("result is ", result);
+    onSave(result);
   };
 
   return (
@@ -31,13 +44,14 @@ const DialogPrompt = ({ onSave }: DialogProps) => {
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content className="DialogContent">
           <Dialog.Title className="DialogTitle">Prompt Form</Dialog.Title>
-          <Dialog.Description className="DialogDescription">
-
-          </Dialog.Description>
+          <Dialog.Description className="DialogDescription"></Dialog.Description>
           <PromptInput name="name" onChange={onChange} />
           <PromptInput name="company" onChange={onChange} />
           <PromptInput name="context" onChange={onChange} />
           <PromptInput name="objective" onChange={onChange} />
+          <Divider />
+          <PromptField addField={onAddField} />
+
           <div
             style={{
               display: "flex",
