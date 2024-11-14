@@ -8,16 +8,23 @@ import { Response } from "@/app/components/chat/Response";
 import { Question } from "@/app/components/chat/Question";
 import { Spinner } from "@radix-ui/themes";
 import { Session } from "next-auth";
+import PromptForm from "@/app/components/PromptForm";
 
 type ChatBoxProps = {
   session: Session | null;
 };
 
+type ConversationType = { role: string; content: string }[];
+
 const ChatBox = ({ session }: ChatBoxProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [conversation, setConversation] = useState<
-    { role: string; content: string }[]
-  >([{ role: "assistant", content: "Hi there! How can I assist you?" }]);
+  const [conversation, setConversation] = useState<ConversationType>([
+    {
+      role: "assistant",
+      content:
+        localStorage.getItem("chatPrompt") ?? "Hi there! How can I assist you?",
+    },
+  ]);
 
   const [value, setValue] = useState<string>("");
 
@@ -26,17 +33,19 @@ const ChatBox = ({ session }: ChatBoxProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setConversation((prevConversation) => [
-      ...prevConversation,
-      { role: "User", content: value },
-    ]);
+
+    setConversation((prevConversation) => {
+      return [...prevConversation, { role: "user", content: value }];
+    });
+
     setValue("");
 
     try {
       setIsLoading(true);
+      const messages = [...conversation, { role: "user", content: value }];
       const response = await axios.post(
         "/chat",
-        { question: value },
+        { messages },
         {
           headers: {
             Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
@@ -60,6 +69,7 @@ const ChatBox = ({ session }: ChatBoxProps) => {
 
   return session ? (
     <div className="chat">
+      <PromptForm session={session} />
       <Response response={conversation} />
 
       {isLoading && (

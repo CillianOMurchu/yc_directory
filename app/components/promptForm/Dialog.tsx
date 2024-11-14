@@ -10,28 +10,31 @@ import PromptField, {
   PromptFieldType,
 } from "@/app/components/promptForm/PromptField";
 
-type DialogProps = {
-  onSave: (e: { [key: string]: string } & { fields: PromptFieldType[] }) => void;
+export type FormDetails = {
+  name?: string;
+  company?: string;
+  context?: string;
+  objective?: string;
+};
+
+export type DialogProps = {
+  onSave: (e: FormDetails & { fields: PromptFieldType[] }) => void;
 };
 
 const DialogPrompt = ({ onSave }: DialogProps) => {
-  const [formDetails, setFormDetails] = useState({});
+  const [formDetails, setFormDetails] = useState<FormDetails>({});
   const [fieldDetails, setFieldDetails] = useState<PromptFieldType[]>([]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>, name: string) => {
     setFormDetails({ ...formDetails, [name]: e.target.value });
-    console.log("formDetails is ", formDetails);
   };
 
   const onAddField = (newField: PromptFieldType) => {
-    console.log("previous fields are ", fieldDetails);
     setFieldDetails([...fieldDetails, newField]);
-    console.log("fieldDetails is ", fieldDetails);
   };
 
   const saveChanges = () => {
     const result = { ...formDetails, fields: fieldDetails };
-    console.log("result is ", result);
     onSave(result);
   };
 
@@ -45,13 +48,28 @@ const DialogPrompt = ({ onSave }: DialogProps) => {
         <Dialog.Content className="DialogContent">
           <Dialog.Title className="DialogTitle">Prompt Form</Dialog.Title>
           <Dialog.Description className="DialogDescription"></Dialog.Description>
-          <PromptInput name="name" onChange={onChange} />
-          <PromptInput name="company" onChange={onChange} />
-          <PromptInput name="context" onChange={onChange} />
-          <PromptInput name="objective" onChange={onChange} />
+          <PromptInput
+            value={formDetails.name || ""}
+            name="name"
+            onChange={onChange}
+          />
+          <PromptInput
+            value={formDetails.company|| ""}
+            name="company"
+            onChange={onChange}
+          />
+          <PromptInput
+            value={formDetails.context|| ""}
+            name="context"
+            onChange={onChange}
+          />
+          <PromptInput
+            value={formDetails.objective|| ""}
+            name="objective"
+            onChange={onChange}
+          />
           <Divider />
           <PromptField addField={onAddField} />
-
           <div
             style={{
               display: "flex",

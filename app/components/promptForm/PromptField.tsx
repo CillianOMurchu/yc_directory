@@ -21,9 +21,7 @@ const PromptField = ({ addField }: PromptFieldProps) => {
   };
 
   const updateFields = () => {
-    console.log("Field should be added");
     const result = { label: fieldLabel, type: fieldType };
-    console.log("result is ", result);
     addField(result);
     setFieldLabel("");
     setFieldType("");
@@ -31,8 +29,8 @@ const PromptField = ({ addField }: PromptFieldProps) => {
 
   return (
     <div>
-      <PromptInput name="label" onChange={onChangeLabel} />
-      <PromptInput name="type" onChange={onChangeType} />
+      <PromptInput name="label" onChange={onChangeLabel} value={fieldLabel} />
+      <PromptInput name="type" onChange={onChangeType} value={fieldType} />
       <Button
         className="Button"
         onClick={updateFields}
