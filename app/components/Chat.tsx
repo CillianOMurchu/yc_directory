@@ -17,12 +17,13 @@ type ChatBoxProps = {
 type ConversationType = { role: string; content: string }[];
 
 const ChatBox = ({ session }: ChatBoxProps) => {
+  const savedPrompt = window.localStorage.getItem("chatPrompt");
+  console.log("savedPrompt is ", savedPrompt);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [conversation, setConversation] = useState<ConversationType>([
     {
       role: "assistant",
-      content:
-        localStorage.getItem("chatPrompt") ?? "Hi there! How can I assist you?",
+      content: savedPrompt ?? "Hi there! How can I assist you?",
     },
   ]);
 
