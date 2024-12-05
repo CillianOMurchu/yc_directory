@@ -1,21 +1,33 @@
-// import OpenAI from "openai";
-
-// const apiKey = process.env.OPENAI_API_KEY;
-// const openai = new OpenAI({ apiKey: apiKey });
+import clientPromise from "@/app/lib/mongoDB";
 
 export async function POST(req: Request) {
-  console.log("request is ", req.body);
-  //   const { messages } = await req.json();
-  //   const response = await openai.chat.completions.create({
-  //     messages,
-  //     model: "gpt-4o",
-  //     response_format: {
-  //       type: 'json_object',
-  //     },
-  //     temperature: 0,
-  //     max_tokens: 300,
-  //   });
-  //   return new Response(JSON.stringify(response));
-     return new Response(JSON.stringify(req.body));
+  const { conversation, id } = await req.json();
 
+  const client = await clientPromise;
+  const db = client.db("conversations");
+
+  // Find the document with the specified id and replace it
+  const newDocument = { conversation, id };
+  const options = { returnOriginal: false, upsert: true };
+
+  await db
+    .collection("conversations")
+    .findOneAndReplace({ id }, newDocument, options);
+
+  // console.log("Updated document is ", result.value);
+
+  return new Response(JSON.stringify({ name: "collection" }));
+  // }
+
+  // // Find the document with the specified id and replace it, or create a new one if it doesn't exist
+  // const newDocument = { conversation, id };
+  // const options = { returnOriginal: false, upsert: true };  // This option creates a new document if no document matches the filter
+
+  // const result = await db
+  //   .collection("conversations")
+  //   .findOneAndUpdate({ id }, { $set: newDocument }, options);
+
+  // // console.log("Updated document is ", result.value);
+
+  // return new Response(JSON.stringify({ name: "collection" }));
 }

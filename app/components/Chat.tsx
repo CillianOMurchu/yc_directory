@@ -60,11 +60,16 @@ const ChatBox = ({ session }: ChatBoxProps) => {
           },
         }
       );
+      console.log("messages is ", { messages });
       const responseContent = response.data.choices[0].message.content;
+      console.log("responseContent is ", responseContent);
 
       if (responseContent) {
         // save the response to a mongodb database
-        await axios.post("/api/conversations", { messages, responseContent });
+        await axios.post("/api/conversations", {
+          id: session?.user?.email,
+          conversation: responseContent,
+        });
 
         setIsLoading(false);
         const role = response.data.choices[0].message.role;
