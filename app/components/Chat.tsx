@@ -18,7 +18,6 @@ type ConversationType = { role: string; content: string }[];
 
 const ChatBox = ({ session }: ChatBoxProps) => {
   const savedPrompt = window.localStorage.getItem("chatPrompt");
-  console.log("savedPrompt is ", savedPrompt);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [conversation, setConversation] = useState<ConversationType>([
     {
@@ -27,12 +26,21 @@ const ChatBox = ({ session }: ChatBoxProps) => {
     },
   ]);
 
+  // clear the currentConversation from localStorage if its the beginning of a new chat
+  if (!conversation[1]) {
+    window.localStorage.removeItem("currentConversation");
+  }
+
   const [value, setValue] = useState<string>("");
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("submit clicked");
+    // updateSavedChat();
+
     e.preventDefault();
 
     setConversation((prevConversation) => {
@@ -57,15 +65,33 @@ const ChatBox = ({ session }: ChatBoxProps) => {
       if (responseContent) {
         setIsLoading(false);
         const role = response.data.choices[0].message.role;
-        setConversation((prevConversation) => [
-          ...prevConversation,
-          { role, content: responseContent },
-        ]);
+
+        setConversation((prevConversation) => {
+          updateSavedChat([
+            ...prevConversation,
+            { role, content: responseContent },
+          ]);
+          return [...prevConversation, { role, content: responseContent }];
+        });
       }
     } catch (error) {
       setIsLoading(false);
       console.error("Error fetching response:", error);
     }
+  };
+
+  const updateSavedChat = (contentToSave: { role: any; content: any }[]) => {
+    const previousSavedChat = window.localStorage.getItem(
+      "currentConversation"
+    );
+    const updatedChat = previousSavedChat
+      ? JSON.parse(previousSavedChat).concat(contentToSave)
+      : [contentToSave];
+
+    window.localStorage.setItem(
+      "currentConversation",
+      JSON.stringify(updatedChat)
+    );
   };
 
   return session ? (
@@ -81,6 +107,7 @@ const ChatBox = ({ session }: ChatBoxProps) => {
       )}
 
       <Question value={value} onChange={onChange} handleSubmit={handleSubmit} />
+      <div>{JSON.stringify(conversation, null, "\t")}</div>
     </div>
   ) : (
     <div>Sign in to view chatbot</div>
