@@ -39,7 +39,6 @@ const ChatBox = ({ session }: ChatBoxProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     console.log("submit clicked");
-    // updateSavedChat();
 
     e.preventDefault();
 
@@ -53,7 +52,7 @@ const ChatBox = ({ session }: ChatBoxProps) => {
       setIsLoading(true);
       const messages = [...conversation, { role: "user", content: value }];
       const response = await axios.post(
-        "/chat",
+        "/api/chat",
         { messages },
         {
           headers: {
@@ -62,7 +61,11 @@ const ChatBox = ({ session }: ChatBoxProps) => {
         }
       );
       const responseContent = response.data.choices[0].message.content;
+
       if (responseContent) {
+        // save the response to a mongodb database
+        await axios.post("/api/conversations", { messages, responseContent });
+
         setIsLoading(false);
         const role = response.data.choices[0].message.role;
 
