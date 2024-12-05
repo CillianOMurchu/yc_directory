@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import "./dialog.css";
@@ -18,10 +18,11 @@ export type FormDetails = {
 };
 
 export type DialogProps = {
-  onSave: (e: FormDetails & { fields: PromptFieldType[] }) => void;
+  onSavePromptForm: (e: FormDetails & { fields: PromptFieldType[] }) => void;
 };
 
-const DialogPrompt = ({ onSave }: DialogProps) => {
+const DialogPrompt = ({ onSavePromptForm }: DialogProps) => {
+  const closeRef = useRef(null);
   const [formDetails, setFormDetails] = useState<FormDetails>({});
   const [fieldDetails, setFieldDetails] = useState<PromptFieldType[]>([]);
 
@@ -35,11 +36,19 @@ const DialogPrompt = ({ onSave }: DialogProps) => {
 
   const saveChanges = () => {
     const result = { ...formDetails, fields: fieldDetails };
-    onSave(result);
+    onSavePromptForm(result);
+    if (closeRef.current) {
+      closeRef.current.click();
+    }
   };
 
   return (
     <Dialog.Root>
+      <Dialog.Close asChild ref={closeRef}>
+        <button className="IconButton" aria-label="Close">
+          <Cross2Icon />
+        </button>
+      </Dialog.Close>
       <Dialog.Trigger asChild>
         <button className="Button violet">Prompt Form</button>
       </Dialog.Trigger>
@@ -54,17 +63,17 @@ const DialogPrompt = ({ onSave }: DialogProps) => {
             onChange={onChange}
           />
           <PromptInput
-            value={formDetails.company|| ""}
+            value={formDetails.company || ""}
             name="company"
             onChange={onChange}
           />
           <PromptInput
-            value={formDetails.context|| ""}
+            value={formDetails.context || ""}
             name="context"
             onChange={onChange}
           />
           <PromptInput
-            value={formDetails.objective|| ""}
+            value={formDetails.objective || ""}
             name="objective"
             onChange={onChange}
           />

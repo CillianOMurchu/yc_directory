@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import DialogPrompt, { FormDetails } from "@/app/components/promptForm/Dialog";
 import { Session } from "next-auth";
 import { PromptFieldType } from "@/app/components/promptForm/PromptField";
+import axios from "axios";
 
 type PromptFormProps = {
   session: Session | null;
@@ -23,8 +24,11 @@ const PromptForm = ({ session }: PromptFormProps) => {
     }
   }, [prompt]);
 
-  const onSave = (data: FormDetails & { fields: PromptFieldType[] }) => {
-    const { company, objective, context, fields } = data;
+  const onSavePromptForm = async (
+    data: FormDetails & { fields: PromptFieldType[] }
+  ) => {
+    const { name, company, objective, context, fields } = data;
+    console.log("data is ", data);
 
     // create models for these dynamic vars when they're created
     const variablesString = fields
@@ -33,6 +37,23 @@ const PromptForm = ({ session }: PromptFormProps) => {
           `{ ${type.label}: ${type.type} }`
       )
       .join(", ");
+
+    const promptForm = {
+      name,
+      company,
+      objective,
+      context,
+      fields,
+    };
+    console.log("promptForm is ", promptForm);
+
+    const createdPromptForm = await axios.post("/api/promptForms", {
+      promptForm,
+    });
+
+    await axios.post("/api/users", {
+      currentPromptForm: createdPromptForm.data.id,
+    });
 
     const prompt = `This is the prompt.
 #Introduction:
@@ -75,7 +96,7 @@ ${context}`;
     setPrompt(prompt);
   };
 
-  return session ? <DialogPrompt onSave={onSave} /> : null;
+  return session ? <DialogPrompt onSavePromptForm={onSavePromptForm} /> : null;
 };
 
 export default PromptForm;
