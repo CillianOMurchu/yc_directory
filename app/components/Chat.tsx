@@ -14,6 +14,8 @@ type ChatBoxProps = {
   session: Session | null;
 };
 
+type Role = "assistant" | "user";
+
 type ConversationType = { role: string; content: string }[];
 
 const ChatBox = ({ session }: ChatBoxProps) => {
@@ -89,7 +91,9 @@ const ChatBox = ({ session }: ChatBoxProps) => {
     }
   };
 
-  const updateSavedChat = (contentToSave: { role: any; content: any }[]) => {
+  const updateSavedChat = (
+    contentToSave: { role: Role; content: string }[]
+  ) => {
     const previousSavedChat = window.localStorage.getItem(
       "currentConversation"
     );

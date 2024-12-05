@@ -24,7 +24,7 @@ const PromptForm = ({ session }: PromptFormProps) => {
   }, [prompt]);
 
   const onSave = (data: FormDetails & { fields: PromptFieldType[] }) => {
-    const { name, company, objective, context, fields } = data;
+    const { company, objective, context, fields } = data;
 
     // create models for these dynamic vars when they're created
     const variablesString = fields
