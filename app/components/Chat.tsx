@@ -69,6 +69,7 @@ const ChatBox = ({ session }: ChatBoxProps) => {
         await axios.post("/api/conversations", {
           id: session?.user?.email,
           conversation: responseContent,
+          savedPrompt: savedPrompt,
         });
 
         setIsLoading(false);
@@ -115,7 +116,7 @@ const ChatBox = ({ session }: ChatBoxProps) => {
       )}
 
       <Question value={value} onChange={onChange} handleSubmit={handleSubmit} />
-      <div>{JSON.stringify(conversation, null, "\t")}</div>
+      {/* <div>{JSON.stringify(conversation, null, "\t")}</div> */}
     </div>
   ) : (
     <div>Sign in to view chatbot</div>

@@ -1,13 +1,13 @@
 import clientPromise from "@/app/lib/mongoDB";
 
 export async function POST(req: Request) {
-  const { conversation, id } = await req.json();
+  const { conversation, id, savedPrompt } = await req.json();
 
   const client = await clientPromise;
   const db = client.db("conversations");
 
   // Find the document with the specified id and replace it
-  const newDocument = { conversation, id };
+  const newDocument = { conversation, id, savedPrompt };
   const options = { returnOriginal: false, upsert: true };
 
   await db

@@ -17,3 +17,7 @@ export async function POST(req: Request) {
   });
   return new Response(JSON.stringify(response));
 }
+
+
+// User model - mongoose?
+// 
