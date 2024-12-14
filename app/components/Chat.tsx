@@ -8,7 +8,6 @@ import { Response } from "@/app/components/chat/Response";
 import { Question } from "@/app/components/chat/Question";
 import { Spinner } from "@radix-ui/themes";
 import { Session } from "next-auth";
-import PromptForm from "@/app/components/PromptForm";
 
 type ChatBoxProps = {
   session: Session | null;
@@ -109,7 +108,6 @@ const ChatBox = ({ session }: ChatBoxProps) => {
 
   return session ? (
     <div className="chat">
-      <PromptForm session={session} />
       <Response response={conversation} />
 
       {isLoading && (
