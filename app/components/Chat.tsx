@@ -50,67 +50,88 @@ const ChatBox = ({ session }: ChatBoxProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setConversation((prevConversation) => {
-      return [...prevConversation, { role: "user", content: value }];
-    });
-
-    setValue("");
+    const userMessage = { role: "user", content: value };
+    const newConversation = [...conversation, userMessage];
 
     try {
       setIsLoading(true);
-      const messages = [...conversation, { role: "user", content: value }];
-      console.log("messages are ", messages);
       const response = await axios.post(
         "/api/chat",
-        { messages },
+        { messages: newConversation },
         {
           headers: {
             Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           },
         }
       );
-      console.log("messages is ", { messages });
       const responseContent = response.data.choices[0].message.content;
-      console.log("responseContent is ", responseContent);
 
       if (responseContent) {
-        // save the response to a mongodb database
-        // await axios.post("/api/conversations", {
-        //   id: session?.user?.email,
-        //   conversation: responseContent,
-        // savedPrompt: savedPrompt,
-        // });
+        const assistantMessage = {
+          role: response.data.choices[0].message.role,
+          content: responseContent,
+        };
+        const updatedConversation = [...newConversation, assistantMessage];
+
+        // Update state
+        setConversation(updatedConversation);
+
+        // Save conversation to the database
+        await axios.post("/api/conversations", {
+          id: session?.user?.email,
+          conversation: updatedConversation,
+        });
 
         setIsLoading(false);
-        const role = response.data.choices[0].message.role;
-
-        setConversation((prevConversation) => {
-          updateSavedChat([
-            ...prevConversation,
-            { role, content: responseContent },
-          ]);
-          return [...prevConversation, { role, content: responseContent }];
-        });
       }
     } catch (error) {
       setIsLoading(false);
       console.error("Error fetching response:", error);
     }
-  };
 
-  const updateSavedChat = (
-    contentToSave: { role: Role; content: string }[]
-  ) => {
-    // const previousSavedChat = window.localStorage.getItem(
-    //   "currentConversation"
-    // );
-    // const updatedChat = previousSavedChat
-    //   ? JSON.parse(previousSavedChat).concat(contentToSave)
-    //   : [contentToSave];
-    // window.localStorage.setItem(
-    //   "currentConversation",
-    //   JSON.stringify(updatedChat)
-    // );
+    // Clear input field
+    setValue("");
+
+    // setConversation((prevConversation) => {
+    //   return [...prevConversation, { role: "user", content: value }];
+    // });
+
+    // await axios.post("/api/conversations", {
+    //   id: session?.user?.email,
+    //   conversation,
+    // });
+
+    // setValue("");
+
+    // try {
+    //   setIsLoading(true);
+    //   const messages = [...conversation, { role: "user", content: value }];
+    //   const response = await axios.post(
+    //     "/api/chat",
+    //     { messages },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    //       },
+    //     }
+    //   );
+    //   const responseContent = response.data.choices[0].message.content;
+
+    //   if (responseContent) {
+    //     setIsLoading(false);
+    //     const role = response.data.choices[0].message.role;
+    //     setConversation((prevConversation) => {
+    //       return [...prevConversation, { role, content: responseContent }];
+    //     });
+    //     await axios.post("/api/conversations", {
+    //       id: session?.user?.email,
+    //       conversation,
+    //     });
+    //   }
+    // } catch (error) {
+    //   setIsLoading(false);
+    //   console.error("Error fetching response:", error);
+    // }
   };
 
   return session ? (
