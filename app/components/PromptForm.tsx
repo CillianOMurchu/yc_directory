@@ -33,6 +33,7 @@ const PromptForm = ({ session }: PromptFormProps) => {
     const variablesToGet = extractVariables(filledTemplate);
     const createdPromptFormId = await axios.post("/api/promptForms", {
       promptForm: promptFormVariables,
+      id: session?.user?.email,
     });
     const userId = await axios.post("/api/users", {
       session,
@@ -44,12 +45,13 @@ const PromptForm = ({ session }: PromptFormProps) => {
       promptFormId: createdPromptFormId.data,
       variablesToGet,
     });
-    console.log("filledTemplateId is ", filledTemplateId);
     const updatedUser = await axios.post(`/api/users`, {
       session,
       userId: userId.data,
       filledTemplateId: filledTemplateId.data,
+      createdPromptFormId: createdPromptFormId.data,
       filledTemplate,
+      variablesToGet,
     });
   };
 

@@ -1,8 +1,13 @@
 import clientPromise from "@/app/lib/mongoDB";
 
 export async function POST(req: Request) {
-  const { session, promptFormId, filledTemplateId, filledTemplate } =
-    await req.json();
+  const {
+    session,
+    promptFormId,
+    filledTemplateId,
+    filledTemplate,
+    variablesToGet,
+  } = await req.json();
   const collection = "users";
   const client = await clientPromise;
   const db = client.db(collection);
@@ -10,7 +15,6 @@ export async function POST(req: Request) {
   const existingUser = await db
     .collection(collection)
     .findOne({ email: session.user.email });
-  console.log("filledTemplateId in api request is ", filledTemplateId);
   if (!existingUser) {
     const newDocument = {
       email: session.user.email,
@@ -18,6 +22,7 @@ export async function POST(req: Request) {
       promptForm: promptFormId,
       filledTemplateId,
       filledTemplate,
+      variablesToGet,
     };
     const newInsertion = await db.collection(collection).insertOne(newDocument);
 
@@ -27,12 +32,12 @@ export async function POST(req: Request) {
       ...(promptFormId && { promptForm: promptFormId }),
       ...(filledTemplateId && { filledTemplateId: filledTemplateId }),
       ...(filledTemplate && { filledTemplate: filledTemplate }),
+      ...(variablesToGet && { variablesToGet }),
     };
     const updateResult = await db
       .collection(collection)
       .updateOne({ email: session.user.email }, { $set: updateFields });
 
-    console.log("updateResult is ", updateResult);
     if (updateResult.modifiedCount === 1) {
       // Fetch the updated document
       const updatedUser = await db
@@ -46,18 +51,13 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  console.log("get Request is ", req.url.searchParams);
-  // get session from the params
-  // const email = req.url.searchParams.get('user[email]');
-  // const { session } = await req.json();
+  const { searchParams } = new URL(req.url);
+  const email = searchParams.get("email");
   const collection = "users";
   const client = await clientPromise;
   const db = client.db(collection);
 
-  const fetchedUser = await db
-    .collection(collection)
-    .findOne({ email: "cillian.murchu@gmail.com" });
-  console.log("fetchedUser is ", fetchedUser);
+  const fetchedUser = await db.collection(collection).findOne({ email });
   if (fetchedUser) {
     return new Response(JSON.stringify(fetchedUser.filledTemplate));
   } else {

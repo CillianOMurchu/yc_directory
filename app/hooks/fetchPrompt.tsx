@@ -17,7 +17,6 @@ export const fetchPrompt = () => {
         setPrompt(promptToSet ?? "");
       } catch (error) {
         if (axios.isCancel(error)) {
-          console.log("Request cancelled", error.message);
         } else {
           console.error(error);
         }

@@ -8,7 +8,6 @@ import { Response } from "@/app/components/chat/Response";
 import { Question } from "@/app/components/chat/Question";
 import { Spinner } from "@radix-ui/themes";
 import { Session } from "next-auth";
-import { getUserByEmail } from "@/app/utils/getUserByEmail";
 
 type ChatBoxProps = {
   session: Session | null;
@@ -30,7 +29,7 @@ const ChatBox = ({ session }: ChatBoxProps) => {
         return;
       }
       const userFilledTemplate = await axios.get("/api/users", {
-        params: session,
+        params: { email: session?.user?.email },
       });
       setFilledTemplate(userFilledTemplate.data);
     };
@@ -52,7 +51,6 @@ const ChatBox = ({ session }: ChatBoxProps) => {
 
     const userMessage = { role: "user", content: value };
     const newConversation = [...conversation, userMessage];
-
     try {
       setIsLoading(true);
       const response = await axios.post(
@@ -80,6 +78,8 @@ const ChatBox = ({ session }: ChatBoxProps) => {
         await axios.post("/api/conversations", {
           id: session?.user?.email,
           conversation: updatedConversation,
+          // add template id and prompt id here aswell
+
         });
 
         setIsLoading(false);
@@ -91,47 +91,6 @@ const ChatBox = ({ session }: ChatBoxProps) => {
 
     // Clear input field
     setValue("");
-
-    // setConversation((prevConversation) => {
-    //   return [...prevConversation, { role: "user", content: value }];
-    // });
-
-    // await axios.post("/api/conversations", {
-    //   id: session?.user?.email,
-    //   conversation,
-    // });
-
-    // setValue("");
-
-    // try {
-    //   setIsLoading(true);
-    //   const messages = [...conversation, { role: "user", content: value }];
-    //   const response = await axios.post(
-    //     "/api/chat",
-    //     { messages },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-    //       },
-    //     }
-    //   );
-    //   const responseContent = response.data.choices[0].message.content;
-
-    //   if (responseContent) {
-    //     setIsLoading(false);
-    //     const role = response.data.choices[0].message.role;
-    //     setConversation((prevConversation) => {
-    //       return [...prevConversation, { role, content: responseContent }];
-    //     });
-    //     await axios.post("/api/conversations", {
-    //       id: session?.user?.email,
-    //       conversation,
-    //     });
-    //   }
-    // } catch (error) {
-    //   setIsLoading(false);
-    //   console.error("Error fetching response:", error);
-    // }
   };
 
   return session ? (
