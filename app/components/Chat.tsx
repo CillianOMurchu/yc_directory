@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 
@@ -8,7 +8,7 @@ import { Response } from "@/app/components/chat/Response";
 import { Question } from "@/app/components/chat/Question";
 import { Spinner } from "@radix-ui/themes";
 import { Session } from "next-auth";
-import { fetchPrompt } from "@/app/hooks/fetchPrompt";
+import { getUserByEmail } from "@/app/utils/getUserByEmail";
 
 type ChatBoxProps = {
   session: Session | null;
@@ -19,29 +19,35 @@ type Role = "assistant" | "user";
 type ConversationType = { role: string; content: string }[];
 
 const ChatBox = ({ session }: ChatBoxProps) => {
-  const prompt = fetchPrompt();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [conversation, setConversation] = useState<ConversationType>([
-    {
-      role: "assistant",
-      content: prompt ?? "Hi there! How can I assist you?",
-    },
-  ]);
-
-  // clear the currentConversation from localStorage if its the beginning of a new chat
-  // if (!conversation[1]) {
-  //   window.localStorage.removeItem("currentConversation");
-  // }
-
   const [value, setValue] = useState<string>("");
+  const [filledTemplate, setFilledTemplate] = useState<string | null>(null);
+  const [conversation, setConversation] = useState<ConversationType>([]);
+
+  useEffect(() => {
+    const fetchFilledTemplate = async () => {
+      if (!session?.user?.email) {
+        return;
+      }
+      const userFilledTemplate = await axios.get("/api/users", {
+        params: session,
+      });
+      setFilledTemplate(userFilledTemplate.data);
+    };
+    fetchFilledTemplate();
+    setConversation([
+      {
+        role: "assistant",
+        content: filledTemplate || "Hello, how can I help you today?",
+      },
+    ]);
+  }, [filledTemplate]);
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("submit clicked");
-
     e.preventDefault();
 
     setConversation((prevConversation) => {
@@ -53,6 +59,7 @@ const ChatBox = ({ session }: ChatBoxProps) => {
     try {
       setIsLoading(true);
       const messages = [...conversation, { role: "user", content: value }];
+      console.log("messages are ", messages);
       const response = await axios.post(
         "/api/chat",
         { messages },

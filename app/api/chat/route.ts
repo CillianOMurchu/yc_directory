@@ -4,7 +4,6 @@ const apiKey = process.env.OPENAI_API_KEY;
 const openai = new OpenAI({ apiKey: apiKey });
 
 export async function POST(req: Request) {
-  console.log("req from chat is ", req);
   const { messages } = await req.json();
   const response = await openai.chat.completions.create({
     messages,
@@ -17,7 +16,3 @@ export async function POST(req: Request) {
   });
   return new Response(JSON.stringify(response));
 }
-
-
-// User model - mongoose?
-// 
