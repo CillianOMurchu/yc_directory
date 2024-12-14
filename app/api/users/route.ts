@@ -7,6 +7,7 @@ export async function POST(req: Request) {
     filledTemplateId,
     filledTemplate,
     variablesToGet,
+    jsonResponse,
   } = await req.json();
   const collection = "users";
   const client = await clientPromise;
@@ -28,11 +29,22 @@ export async function POST(req: Request) {
 
     return new Response(JSON.stringify(newInsertion.insertedId));
   } else {
+    let mappedVariables = null;
+    if (jsonResponse) {
+      // Map any from the jsonResponse to the variablesToGet items
+      mappedVariables = Object.keys(existingUser.variablesToGet).reduce(
+        (acc, key) => {
+          return { ...acc, [key]: jsonResponse[key] || null };
+        },
+        {}
+      );
+    }
     const updateFields = {
       ...(promptFormId && { promptForm: promptFormId }),
       ...(filledTemplateId && { filledTemplateId: filledTemplateId }),
       ...(filledTemplate && { filledTemplate: filledTemplate }),
       ...(variablesToGet && { variablesToGet }),
+      ...(mappedVariables && { mappedVariables }),
     };
     const updateResult = await db
       .collection(collection)
