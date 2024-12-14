@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   const db = client.db(collection);
 
   const newDocument = promptForm;
-  console.log("newDocument is ", newDocument);
+  console.log("promptForm being saved is ", newDocument);
   const newInsertion = await db.collection(collection).insertOne(newDocument);
 
   return new Response(JSON.stringify(newInsertion.insertedId));

@@ -41,7 +41,6 @@ const PromptForm = ({ session }: PromptFormProps) => {
   ) => {
     const { name, company, objective, context, fields } = data;
 
-    // create models for these dynamic vars when they're created
     const variablesString = fields
       .map(
         (type: { label: string; type: string }) =>
@@ -57,12 +56,19 @@ const PromptForm = ({ session }: PromptFormProps) => {
       fields,
     };
 
-    const createdPromptForm = await axios
-      .post("/api/promptForms", {
-        promptForm: promptFormVariables,
-      });
-    console.log("createdPromptForm is ", createdPromptForm);
-    // await axios.post("/api/users", {
+    const createdPromptFormId = await axios.post("/api/promptForms", {
+      promptForm: promptFormVariables,
+    });
+    console.log("promptId is ", createdPromptFormId.data);
+    const userId = await axios.post("/api/users", {
+      session: session,
+      promptFormId: createdPromptFormId.data,
+    });
+    console.log("userId is ", userId.data);
+    console.log("createdPromptFormId is ", createdPromptFormId);
+    // add userId to created PromptForm
+
+    // const addedToUser = await axios.post("/api/users", {
     //   currentPromptForm: createdPromptForm.data.id,
     // });
 
