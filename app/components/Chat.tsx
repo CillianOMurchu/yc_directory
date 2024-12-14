@@ -8,6 +8,7 @@ import { Response } from "@/app/components/chat/Response";
 import { Question } from "@/app/components/chat/Question";
 import { Spinner } from "@radix-ui/themes";
 import { Session } from "next-auth";
+import { fetchPrompt } from "@/app/hooks/fetchPrompt";
 
 type ChatBoxProps = {
   session: Session | null;
@@ -18,19 +19,19 @@ type Role = "assistant" | "user";
 type ConversationType = { role: string; content: string }[];
 
 const ChatBox = ({ session }: ChatBoxProps) => {
-  const savedPrompt = window.localStorage.getItem("chatPrompt");
+  const prompt = fetchPrompt();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [conversation, setConversation] = useState<ConversationType>([
     {
       role: "assistant",
-      content: savedPrompt ?? "Hi there! How can I assist you?",
+      content: prompt ?? "Hi there! How can I assist you?",
     },
   ]);
 
   // clear the currentConversation from localStorage if its the beginning of a new chat
-  if (!conversation[1]) {
-    window.localStorage.removeItem("currentConversation");
-  }
+  // if (!conversation[1]) {
+  //   window.localStorage.removeItem("currentConversation");
+  // }
 
   const [value, setValue] = useState<string>("");
 
@@ -67,11 +68,11 @@ const ChatBox = ({ session }: ChatBoxProps) => {
 
       if (responseContent) {
         // save the response to a mongodb database
-        await axios.post("/api/conversations", {
-          id: session?.user?.email,
-          conversation: responseContent,
-          savedPrompt: savedPrompt,
-        });
+        // await axios.post("/api/conversations", {
+        //   id: session?.user?.email,
+        //   conversation: responseContent,
+        // savedPrompt: savedPrompt,
+        // });
 
         setIsLoading(false);
         const role = response.data.choices[0].message.role;
@@ -93,17 +94,16 @@ const ChatBox = ({ session }: ChatBoxProps) => {
   const updateSavedChat = (
     contentToSave: { role: Role; content: string }[]
   ) => {
-    const previousSavedChat = window.localStorage.getItem(
-      "currentConversation"
-    );
-    const updatedChat = previousSavedChat
-      ? JSON.parse(previousSavedChat).concat(contentToSave)
-      : [contentToSave];
-
-    window.localStorage.setItem(
-      "currentConversation",
-      JSON.stringify(updatedChat)
-    );
+    // const previousSavedChat = window.localStorage.getItem(
+    //   "currentConversation"
+    // );
+    // const updatedChat = previousSavedChat
+    //   ? JSON.parse(previousSavedChat).concat(contentToSave)
+    //   : [contentToSave];
+    // window.localStorage.setItem(
+    //   "currentConversation",
+    //   JSON.stringify(updatedChat)
+    // );
   };
 
   return session ? (
