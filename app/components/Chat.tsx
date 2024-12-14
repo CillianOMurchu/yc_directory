@@ -79,8 +79,15 @@ const ChatBox = ({ session }: ChatBoxProps) => {
           id: session?.user?.email,
           conversation: updatedConversation,
           // add template id and prompt id here aswell
-
         });
+
+        const jsonResponse = JSON.parse(responseContent);
+        console.log(
+          "response.data.choices[0].message.content si ",
+          jsonResponse
+        );
+        // const variablesToFill =
+        await axios.post("/api/users", { session, jsonResponse });
 
         setIsLoading(false);
       }
