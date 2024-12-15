@@ -5,7 +5,7 @@ import DialogPrompt, { FormDetails } from "@/app/components/promptForm/Dialog";
 import { Session } from "next-auth";
 import { PromptFieldType } from "@/app/components/promptForm/PromptField";
 import axios from "axios";
-import { fetchPrompt } from "@/app/hooks/fetchPrompt";
+import { useFetchPrompt } from "@/app/hooks/fetchPrompt";
 import {
   extractVariables,
   fillTemplate,
@@ -16,7 +16,7 @@ type PromptFormProps = {
 };
 
 const PromptForm = ({ session }: PromptFormProps) => {
-  const defaultPrompt = fetchPrompt();
+  const defaultPrompt = useFetchPrompt();
 
   const onSavePromptForm = async (
     data: FormDetails & { fields: PromptFieldType[] }
