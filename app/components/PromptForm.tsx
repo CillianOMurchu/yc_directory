@@ -45,7 +45,7 @@ const PromptForm = ({ session }: PromptFormProps) => {
       promptFormId: createdPromptFormId.data,
       variablesToGet,
     });
-    const updatedUser = await axios.post(`/api/users`, {
+    await axios.post(`/api/users`, {
       session,
       userId: userId.data,
       filledTemplateId: filledTemplateId.data,
@@ -53,6 +53,7 @@ const PromptForm = ({ session }: PromptFormProps) => {
       filledTemplate,
       variablesToGet,
     });
+
   };
 
   return session ? <DialogPrompt onSavePromptForm={onSavePromptForm} /> : null;
