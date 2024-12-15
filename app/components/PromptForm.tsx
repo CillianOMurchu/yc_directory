@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DialogPrompt, { FormDetails } from "@/app/components/promptForm/Dialog";
 import { Session } from "next-auth";
 import { PromptFieldType } from "@/app/components/promptForm/PromptField";

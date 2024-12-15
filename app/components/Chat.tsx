@@ -15,7 +15,7 @@ type ChatBoxProps = {
 
 type Role = "assistant" | "user";
 
-type ConversationType = { role: string; content: string }[];
+type ConversationType = { role: Role; content: string }[];
 
 const ChatBox = ({ session }: ChatBoxProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export const fetchPrompt = () => {
+export const useFetchPrompt = () => {
   const [prompt, setPrompt] = useState<string>("");
 
   useEffect(() => {
