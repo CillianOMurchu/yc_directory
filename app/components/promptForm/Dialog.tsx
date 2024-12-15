@@ -22,7 +22,7 @@ export type DialogProps = {
 };
 
 const DialogPrompt = ({ onSavePromptForm }: DialogProps) => {
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const [formDetails, setFormDetails] = useState<FormDetails>({});
   const [fieldDetails, setFieldDetails] = useState<PromptFieldType[]>([]);
 
